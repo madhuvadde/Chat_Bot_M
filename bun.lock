@@ -47,8 +47,10 @@
     "packages/server": {
       "name": "server",
       "dependencies": {
+        "@huggingface/inference": "^4.7.1",
         "dotenv": "^17.2.1",
         "express": "^5.1.0",
+        "zod": "^4.1.5",
       },
       "devDependencies": {
         "@types/bun": "latest",
@@ -169,6 +171,12 @@
     "@eslint/object-schema": ["@eslint/object-schema@2.1.6", "", {}, "sha512-RBMg5FRL0I0gs51M/guSAj5/e14VQ4tpZnQNWwuDT66P14I43ItmPfIZRhO9fUVIPOAQXU47atlywZ/czoqFPA=="],
 
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.3.5", "", { "dependencies": { "@eslint/core": "^0.15.2", "levn": "^0.4.1" } }, "sha512-Z5kJ+wU3oA7MMIqVR9tyZRtjYPr4OC004Q4Rw7pgOKUOKkJfZ3O24nz3WYfGRpMDNmcOi3TwQOmgm7B7Tpii0w=="],
+
+    "@huggingface/inference": ["@huggingface/inference@4.7.1", "", { "dependencies": { "@huggingface/jinja": "^0.5.1", "@huggingface/tasks": "^0.19.35" } }, "sha512-gXrMocGDsE6kUZPEj82c3O+/OKnIfbHvg9rYjGA6svbWrYVmHCIAdCrrgCwNl2v5GELfPJrrfIv0bvzCTfa64A=="],
+
+    "@huggingface/jinja": ["@huggingface/jinja@0.5.1", "", {}, "sha512-yUZLld4lrM9iFxHCwFQ7D1HW2MWMwSbeB7WzWqFYDWK+rEb+WldkLdAJxUPOmgICMHZLzZGVcVjFh3w/YGubng=="],
+
+    "@huggingface/tasks": ["@huggingface/tasks@0.19.42", "", {}, "sha512-+FTsNxQA6U8s+cVRzBONXqaQkqB7BrNCONGVk6HdYHMIugEEBo8m9WYZrtr8z0zQPJqqqi+yv2svupE15FCing=="],
 
     "@humanfs/core": ["@humanfs/core@0.19.1", "", {}, "sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA=="],
 
@@ -843,6 +851,8 @@
     "yargs-parser": ["yargs-parser@21.1.1", "", {}, "sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw=="],
 
     "yocto-queue": ["yocto-queue@0.1.0", "", {}, "sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q=="],
+
+    "zod": ["zod@4.1.5", "", {}, "sha512-rcUUZqlLJgBC33IT3PNMgsCq6TzLQEG/Ei/KTCU0PedSWRMAXoOUN+4t/0H+Q8bdnLPdqUYnvboJT0bn/229qg=="],
 
     "@eslint-community/eslint-utils/eslint-visitor-keys": ["eslint-visitor-keys@3.4.3", "", {}, "sha512-wpc+LXeiyiisxPlEkUzU6svyS1frIO3Mgxj1fdy7Pm8Ygzguax2N3Fa/D/ag1WqbOprdI+uY6wMUl8/a2G+iag=="],
 
