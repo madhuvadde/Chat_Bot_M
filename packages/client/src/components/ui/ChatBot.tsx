@@ -28,12 +28,12 @@ const ChatBot = () => {
    const [messages, setMessages] = useState<Message[]>([]);
    const [isBotTyping, setIsBotTyping] = useState(false);
    const conversationId = useRef(crypto.randomUUID());
-   const formRef = useRef<HTMLFormElement | null>(null);
+   const lastMessageRef = useRef<HTMLDivElement | null>(null);
    const { register, handleSubmit, reset, formState } = useForm<FormData>();
    const onSubmitHandler = async ({ prompt }: FormData) => {
       setIsBotTyping(true);
       setMessages((prev) => [...prev, { content: prompt, role: 'user' }]);
-      reset();
+      reset({ prompt: '' });
       const { data } = await axios.post<ChatResponse>('/api/chat', {
          prompt,
          conversationId: conversationId.current,
@@ -50,7 +50,7 @@ const ChatBot = () => {
    };
 
    useEffect(() => {
-      formRef.current?.scrollIntoView({ behavior: 'smooth' });
+      lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' });
    }, [messages]);
 
    const onCopyMessageHandler = (e: ClipboardEvent) => {
@@ -61,12 +61,13 @@ const ChatBot = () => {
       }
    };
    return (
-      <div>
-         <div className="flex flex-col gap-2 mb-10">
+      <div className="flex flex-col h-full">
+         <div className="flex flex-col flex-1 gap-2 mb-10 overflow-y-auto">
             {messages.map((message, index) => (
                <div
                   key={index}
                   onCopy={onCopyMessageHandler}
+                  ref={index === messages.length - 1 ? lastMessageRef : null}
                   className={`px-3 py-1 rounded-xl ${
                      message.role === 'user'
                         ? 'bg-blue-600 text-white self-end'
@@ -88,13 +89,13 @@ const ChatBot = () => {
             onSubmit={handleSubmit(onSubmitHandler)}
             className="flex flex-col gap-2 items-end border-2 p-4 rounded-3xl"
             onKeyDown={onKeyDownHandler}
-            ref={formRef}
          >
             <textarea
                {...register('prompt', {
                   required: true,
                   validate: (data) => data.trim().length > 0,
                })}
+               autoFocus
                className="w-full border-0 focus:outline-0 resize-none"
                placeholder="Ask anything"
                maxLength={100}
