@@ -3,7 +3,7 @@ import {
    useRef,
    useEffect,
    type KeyboardEvent,
-   ClipboardEvent,
+   type ClipboardEvent,
 } from 'react';
 import ReactMarkDown from 'react-markdown';
 import { Button } from './button';
@@ -27,19 +27,30 @@ type Message = {
 const ChatBot = () => {
    const [messages, setMessages] = useState<Message[]>([]);
    const [isBotTyping, setIsBotTyping] = useState(false);
+   const [error, setError] = useState('');
    const conversationId = useRef(crypto.randomUUID());
    const lastMessageRef = useRef<HTMLDivElement | null>(null);
    const { register, handleSubmit, reset, formState } = useForm<FormData>();
    const onSubmitHandler = async ({ prompt }: FormData) => {
-      setIsBotTyping(true);
-      setMessages((prev) => [...prev, { content: prompt, role: 'user' }]);
-      reset({ prompt: '' });
-      const { data } = await axios.post<ChatResponse>('/api/chat', {
-         prompt,
-         conversationId: conversationId.current,
-      });
-      setMessages((prev) => [...prev, { content: data.message, role: 'bot' }]);
-      setIsBotTyping(false);
+      try {
+         setIsBotTyping(true);
+         setError('');
+         setMessages((prev) => [...prev, { content: prompt, role: 'user' }]);
+         reset({ prompt: '' });
+         const { data } = await axios.post<ChatResponse>('/api/chat', {
+            prompt,
+            conversationId: conversationId.current,
+         });
+         setMessages((prev) => [
+            ...prev,
+            { content: data.message, role: 'bot' },
+         ]);
+      } catch (error) {
+         console.error(error);
+         setError('Something went wrong, try again!');
+      } finally {
+         setIsBotTyping(false);
+      }
    };
 
    const onKeyDownHandler = (e: KeyboardEvent<HTMLFormElement>) => {
@@ -84,6 +95,7 @@ const ChatBot = () => {
                   <div className="w-2 h-2 rounded-full bg-gray-800 animate-pulse [animation-delay:0.4s]"></div>
                </div>
             )}
+            {error && <p className="text-red-600">{error}</p>}
          </div>
          <form
             onSubmit={handleSubmit(onSubmitHandler)}
