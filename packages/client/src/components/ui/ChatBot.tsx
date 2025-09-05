@@ -1,4 +1,10 @@
-import { useState, useRef, useEffect, type KeyboardEvent } from 'react';
+import {
+   useState,
+   useRef,
+   useEffect,
+   type KeyboardEvent,
+   ClipboardEvent,
+} from 'react';
 import ReactMarkDown from 'react-markdown';
 import { Button } from './button';
 import { FaArrowUp } from 'react-icons/fa6';
@@ -47,12 +53,20 @@ const ChatBot = () => {
       formRef.current?.scrollIntoView({ behavior: 'smooth' });
    }, [messages]);
 
+   const onCopyMessageHandler = (e: ClipboardEvent) => {
+      const selection = window.getSelection()?.toString().trim();
+      if (selection) {
+         e.preventDefault();
+         e.clipboardData.setData('text/plain', selection);
+      }
+   };
    return (
       <div>
          <div className="flex flex-col gap-2 mb-10">
             {messages.map((message, index) => (
                <div
                   key={index}
+                  onCopy={onCopyMessageHandler}
                   className={`px-3 py-1 rounded-xl ${
                      message.role === 'user'
                         ? 'bg-blue-600 text-white self-end'
