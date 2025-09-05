@@ -1,4 +1,4 @@
-import { useState, useRef, type KeyboardEvent } from 'react';
+import { useState, useRef, useEffect, type KeyboardEvent } from 'react';
 import ReactMarkDown from 'react-markdown';
 import { Button } from './button';
 import { FaArrowUp } from 'react-icons/fa6';
@@ -20,9 +20,12 @@ type Message = {
 
 const ChatBot = () => {
    const [messages, setMessages] = useState<Message[]>([]);
+   const [isBotTyping, setIsBotTyping] = useState(false);
    const conversationId = useRef(crypto.randomUUID());
+   const formRef = useRef<HTMLFormElement | null>(null);
    const { register, handleSubmit, reset, formState } = useForm<FormData>();
    const onSubmitHandler = async ({ prompt }: FormData) => {
+      setIsBotTyping(true);
       setMessages((prev) => [...prev, { content: prompt, role: 'user' }]);
       reset();
       const { data } = await axios.post<ChatResponse>('/api/chat', {
@@ -30,6 +33,7 @@ const ChatBot = () => {
          conversationId: conversationId.current,
       });
       setMessages((prev) => [...prev, { content: data.message, role: 'bot' }]);
+      setIsBotTyping(false);
    };
 
    const onKeyDownHandler = (e: KeyboardEvent<HTMLFormElement>) => {
@@ -38,6 +42,10 @@ const ChatBot = () => {
          handleSubmit(onSubmitHandler)();
       }
    };
+
+   useEffect(() => {
+      formRef.current?.scrollIntoView({ behavior: 'smooth' });
+   }, [messages]);
 
    return (
       <div>
@@ -48,17 +56,25 @@ const ChatBot = () => {
                   className={`px-3 py-1 rounded-xl ${
                      message.role === 'user'
                         ? 'bg-blue-600 text-white self-end'
-                        : 'bg-gray-100 text-black'
+                        : 'bg-gray-100 text-black self-start'
                   }`}
                >
                   <ReactMarkDown>{message.content}</ReactMarkDown>
                </div>
             ))}
+            {isBotTyping && (
+               <div className="flex self-start gap-1 px-3 py-3 bg-gray-200 rounded-full">
+                  <div className="w-2 h-2 rounded-full bg-gray-800 animate-pulse"></div>
+                  <div className="w-2 h-2 rounded-full bg-gray-800 animate-pulse [animation-delay:0.2s]"></div>
+                  <div className="w-2 h-2 rounded-full bg-gray-800 animate-pulse [animation-delay:0.4s]"></div>
+               </div>
+            )}
          </div>
          <form
             onSubmit={handleSubmit(onSubmitHandler)}
             className="flex flex-col gap-2 items-end border-2 p-4 rounded-3xl"
             onKeyDown={onKeyDownHandler}
+            ref={formRef}
          >
             <textarea
                {...register('prompt', {
