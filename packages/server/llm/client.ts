@@ -8,8 +8,12 @@ const inferenceClient = new InferenceClient(process.env.HF_TOKEN);
 export const llmClient = {
    summarize: async (text: string) => {
       const output = await inferenceClient.summarization({
-         model: 'facebook/bart-large-cnn',
-         inputs: text,
+         // model: 'facebook/bart-large-cnn',
+         // model: 'google/pegasus-xsum',
+         model: 'sshleifer/distilbart-cnn-12-6',
+         inputs: `Summarize the following customer reviews into a short paragraph of 4 to 5 lines highlighting
+         key themes, both positive and negative: 
+         ${text}`,
          provider: 'hf-inference',
       });
       return output.summary_text;
