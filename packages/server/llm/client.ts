@@ -11,9 +11,7 @@ export const llmClient = {
          // model: 'facebook/bart-large-cnn',
          // model: 'google/pegasus-xsum',
          model: 'sshleifer/distilbart-cnn-12-6',
-         inputs: `Summarize the following customer reviews into a short paragraph of 4 to 5 lines highlighting
-         key themes, both positive and negative: 
-         ${text}`,
+         inputs: text,
          provider: 'hf-inference',
       });
       return output.summary_text;
