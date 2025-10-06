@@ -2,6 +2,7 @@ import express from 'express';
 import type { Request, Response } from 'express';
 import { llmClient } from './llm/client';
 import { chatController } from './controller/chat.controller';
+import { reviewController } from './controller/review.controller';
 
 const router = express.Router();
 
@@ -19,5 +20,7 @@ router.post('/api/summarize', async (req: Request, res: Response) => {
 });
 
 router.post('/api/chat', chatController.sendMessage);
+
+router.get('/api/products/:id/reviews', reviewController.getReviews);
 
 export default router;
