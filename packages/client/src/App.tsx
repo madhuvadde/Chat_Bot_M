@@ -1,10 +1,12 @@
 import './App.css';
-import ChatBot from './components/ui/ChatBot';
+import ReviewList from './components/reviews/ReviewList';
+// import ChatBot from './components/ui/ChatBot';
 
 function App() {
    return (
       <div className="p-4 h-screen">
-         <ChatBot />
+         {/* <ChatBot /> */}
+         <ReviewList productId={1} />
       </div>
    );
 }
