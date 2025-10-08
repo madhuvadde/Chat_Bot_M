@@ -2,6 +2,8 @@ import axios from 'axios';
 import StarRatings from './StarRatings';
 import Skeleton from 'react-loading-skeleton';
 import { useQuery } from '@tanstack/react-query';
+import { Button } from '../ui/button';
+import { TbSparkles } from 'react-icons/tb';
 
 type Props = {
    productId: number;
@@ -20,9 +22,6 @@ type GetReviewsResponse = {
    reviews: Review[];
 };
 const ReviewList = ({ productId }: Props) => {
-   // const [reviewData, setReviewData] = useState<GetReviewsResponse>();
-   // const [isLoading, setIsLoading] = useState<boolean>(false);
-   // const [error, setError] = useState('');
    const {
       data: reviewData,
       isLoading,
@@ -60,17 +59,33 @@ const ReviewList = ({ productId }: Props) => {
       );
    }
 
+   if (!reviewData?.reviews.length) {
+      return null;
+   }
+
    return (
-      <div className="flex flex-col gap-5">
-         {reviewData?.reviews.map((review) => (
-            <div key={review.id}>
-               <div className="font-semibold">{review.author}</div>
-               <div>
-                  Rating: <StarRatings value={review.rating} />
+      <div>
+         <div className="mb-5">
+            {reviewData?.summary ? (
+               <p>{reviewData?.summary}</p>
+            ) : (
+               <Button className="bg-yellow-500">
+                  <TbSparkles />
+                  Summarize
+               </Button>
+            )}
+         </div>
+         <div className="flex flex-col gap-5">
+            {reviewData?.reviews.map((review) => (
+               <div key={review.id}>
+                  <div className="font-semibold">{review.author}</div>
+                  <div>
+                     Rating: <StarRatings value={review.rating} />
+                  </div>
+                  <p className="py-2">{review.content}</p>
                </div>
-               <p className="py-2">{review.content}</p>
-            </div>
-         ))}
+            ))}
+         </div>
       </div>
    );
 };
