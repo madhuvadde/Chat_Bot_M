@@ -1,10 +1,8 @@
 import axios from 'axios';
 import StarRatings from './StarRatings';
-import Skeleton from 'react-loading-skeleton';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button } from '../ui/button';
 import { TbSparkles } from 'react-icons/tb';
-import { useState } from 'react';
 import ReviewSkeleton from './ReviewSkeleton';
 
 type Props = {
@@ -28,15 +26,11 @@ type SummarizeResponse = {
    summary: string;
 };
 const ReviewList = ({ productId }: Props) => {
-   const [summary, setSummary] = useState('');
-   const [isSummaryLoading, setIsSummaryLoading] = useState(false);
-   const [isSummaryError, setIsSummaryError] = useState('');
+   const summaryMutation = useMutation<SummarizeResponse>({
+      mutationFn: () => summarizeReviews(),
+   });
 
-   const {
-      data: reviewData,
-      isLoading,
-      error,
-   } = useQuery<GetReviewsResponse>({
+   const reviewsQuery = useQuery<GetReviewsResponse>({
       queryKey: ['reviews', productId],
       queryFn: () => fetchReviews(),
    });
@@ -49,27 +43,14 @@ const ReviewList = ({ productId }: Props) => {
       return data;
    };
 
-   const handleSummarize = async () => {
-      setIsSummaryLoading(true);
-      setIsSummaryError('');
-
-      try {
-         const { data } = await axios.post<SummarizeResponse>(
-            `/api/products/${productId}/reviews/summarize`
-         );
-
-         setSummary(data.summary);
-      } catch (error) {
-         console.error(error);
-         setIsSummaryError(
-            'Could not fetch the review summary. Please try again!'
-         );
-      } finally {
-         setIsSummaryLoading(false);
-      }
+   const summarizeReviews = async () => {
+      const { data } = await axios.post<SummarizeResponse>(
+         `/api/products/${productId}/reviews/summarize`
+      );
+      return data;
    };
 
-   if (isLoading) {
+   if (reviewsQuery.isLoading) {
       return (
          <div className="flex flex-col gap-5">
             {[1, 2, 3].map((i) => (
@@ -79,46 +60,49 @@ const ReviewList = ({ productId }: Props) => {
       );
    }
 
-   if (error) {
+   if (reviewsQuery.error) {
       return (
          <p className="text-red-500">Could not fetch reviews. Try again!</p>
       );
    }
 
-   if (!reviewData?.reviews.length) {
+   if (!reviewsQuery.data?.reviews.length) {
       return null;
    }
 
-   const currentSummary = reviewData?.summary || summary;
+   const currentSummary =
+      reviewsQuery.data?.summary || summaryMutation.data?.summary;
 
    return (
       <div>
          <div className="mb-5">
-            {reviewData?.summary ? (
+            {reviewsQuery.data?.summary ? (
                <p>{currentSummary}</p>
             ) : (
                <div>
                   <Button
                      className="bg-yellow-500 cursor-pointer"
-                     disabled={isSummaryLoading}
-                     onClick={handleSummarize}
+                     disabled={summaryMutation.isPending}
+                     onClick={() => summaryMutation.mutate()}
                   >
                      <TbSparkles />
                      Summarize
                   </Button>
-                  {isSummaryLoading && (
+                  {summaryMutation.isPending && (
                      <div className="py-3">
                         <ReviewSkeleton />
                      </div>
                   )}
-                  {isSummaryError && (
-                     <p className="text-red-500">{isSummaryError}</p>
+                  {summaryMutation.isError && (
+                     <p className="text-red-500">
+                        Could not summarize errors. Try again!
+                     </p>
                   )}
                </div>
             )}
          </div>
          <div className="flex flex-col gap-5">
-            {reviewData?.reviews.map((review) => (
+            {reviewsQuery.data?.reviews.map((review) => (
                <div key={review.id}>
                   <div className="font-semibold">{review.author}</div>
                   <div>
