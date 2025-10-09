@@ -4,6 +4,8 @@ import Skeleton from 'react-loading-skeleton';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '../ui/button';
 import { TbSparkles } from 'react-icons/tb';
+import { useState } from 'react';
+import ReviewSkeleton from './ReviewSkeleton';
 
 type Props = {
    productId: number;
@@ -21,7 +23,13 @@ type GetReviewsResponse = {
    summary: string | null;
    reviews: Review[];
 };
+
+type SummarizeResponse = {
+   summary: string;
+};
 const ReviewList = ({ productId }: Props) => {
+   const [summary, setSummary] = useState('');
+   const [isSummaryLoading, setIsSummaryLoading] = useState(false);
    const {
       data: reviewData,
       isLoading,
@@ -39,15 +47,22 @@ const ReviewList = ({ productId }: Props) => {
       return data;
    };
 
+   const handleSummarize = async () => {
+      setIsSummaryLoading(true);
+
+      const { data } = await axios.post<SummarizeResponse>(
+         `/api/products/${productId}/reviews/summarize`
+      );
+
+      setSummary(data.summary);
+      setIsSummaryLoading(false);
+   };
+
    if (isLoading) {
       return (
          <div className="flex flex-col gap-5">
             {[1, 2, 3].map((i) => (
-               <div key={i}>
-                  <Skeleton width={150} />
-                  <Skeleton width={100} />
-                  <Skeleton width={2} />
-               </div>
+               <ReviewSkeleton key={i} />
             ))}
          </div>
       );
@@ -63,16 +78,29 @@ const ReviewList = ({ productId }: Props) => {
       return null;
    }
 
+   const currentSummary = reviewData?.summary || summary;
+
    return (
       <div>
          <div className="mb-5">
             {reviewData?.summary ? (
-               <p>{reviewData?.summary}</p>
+               <p>{currentSummary}</p>
             ) : (
-               <Button className="bg-yellow-500">
-                  <TbSparkles />
-                  Summarize
-               </Button>
+               <div>
+                  <Button
+                     className="bg-yellow-500 cursor-pointer"
+                     disabled={isSummaryLoading}
+                     onClick={handleSummarize}
+                  >
+                     <TbSparkles />
+                     Summarize
+                  </Button>
+                  {isSummaryLoading && (
+                     <div className="py-3">
+                        <ReviewSkeleton />
+                     </div>
+                  )}
+               </div>
             )}
          </div>
          <div className="flex flex-col gap-5">
