@@ -1,4 +1,8 @@
-import express from 'express';
+import express, {
+   type Request,
+   type Response,
+   type NextFunction,
+} from 'express';
 import path from 'path';
 import { existsSync } from 'fs';
 import router from './routes';
@@ -51,8 +55,13 @@ if (process.env.NODE_ENV === 'production') {
       console.log('Serving static files from:', clientDistPath);
       app.use(express.static(clientDistPath));
 
-      // Handle React routing, return all requests to React app
+      // Handle React routing, but only for non-API routes
       app.use((req, res) => {
+         // Skip API routes - they should be handled by the router above
+         if (req.path.startsWith('/api')) {
+            return res.status(404).json({ error: 'API endpoint not found' });
+         }
+
          console.log('Serving index.html for route:', req.path);
          res.sendFile(path.join(clientDistPath, 'index.html'));
       });
@@ -63,6 +72,11 @@ if (process.env.NODE_ENV === 'production') {
       );
       // Fallback: serve a simple message if client build is not found
       app.use((req, res) => {
+         // Skip API routes - they should be handled by the router above
+         if (req.path.startsWith('/api')) {
+            return res.status(404).json({ error: 'API endpoint not found' });
+         }
+
          res.send(
             'Client build not found. Please ensure the client is built before deployment.'
          );
@@ -126,6 +140,23 @@ if (process.env.NODE_ENV === 'production') {
       `);
    });
 }
+
+// 404 handler for unmatched routes
+app.use((req, res) => {
+   res.status(404).json({
+      error: 'Not found',
+      message: `Route ${req.path} not found`,
+   });
+});
+
+// Error handling middleware - must be last
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+   console.error('Error:', err);
+   res.status(500).json({
+      error: 'Internal server error',
+      message: err.message,
+   });
+});
 
 const port = process.env.PORT || 3000;
 
