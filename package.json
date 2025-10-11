@@ -8,7 +8,8 @@
       "format": "prettier --write .",
       "prepare": "husky",
       "build": "cd packages/client && npm run build",
-      "start": "cd packages/server && bun run start"
+      "start": "cd packages/server && bun run start",
+      "start:prod": "cd packages/server && bun run start"
    },
    "devDependencies": {
       "@types/bun": "latest",

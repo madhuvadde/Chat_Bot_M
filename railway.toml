@@ -1,5 +1,6 @@
 [build]
 builder = "NIXPACKS"
+buildCommand = "cd packages/client && npm install && npm run build && cd ../server && bun install"
 
 [deploy]
 startCommand = "cd packages/server && bun run start"
