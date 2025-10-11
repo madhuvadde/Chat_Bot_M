@@ -93,7 +93,7 @@ if (process.env.NODE_ENV === 'production') {
          environment: 'development',
          status: 'running',
          client_url: 'http://localhost:5173',
-         api_endpoints: ['/api/hello', '/api/chat'],
+         api_endpoints: ['/api/hello', '/api/chat', '/api/generate-image'],
       });
    });
 
@@ -131,6 +131,7 @@ if (process.env.NODE_ENV === 'production') {
                   <ul>
                      <li><a href="/api/hello">/api/hello</a> - Test endpoint</li>
                      <li><a href="/api/chat">/api/chat</a> - Chat endpoint (POST)</li>
+                     <li><a href="/api/generate-image">/api/generate-image</a> - Image generation endpoint (POST)</li>
                   </ul>
                   
                   <p><em>This page is only shown in development mode.</em></p>

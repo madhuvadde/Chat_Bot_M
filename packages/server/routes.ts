@@ -2,14 +2,11 @@ import express from 'express';
 import type { Request, Response } from 'express';
 // import { llmClient } from './llm/client';
 import { chatController } from './controller/chat.controller';
+import { imageController } from './controller/image.controller';
 // import { reviewController } from './controller/review.controller';
 
 const router = express.Router();
 
-// Root route moved to main server file for environment-specific handling
-// router.get('/', (req: Request, res: Response) => {
-//    res.send(`Hello World!! ${process.env.HUGGING_API_KEY}`);
-// });
 router.get('/api/hello', (req: Request, res: Response) => {
    console.log('API /api/hello called');
    try {
@@ -26,7 +23,7 @@ router.get('/api/hello', (req: Request, res: Response) => {
 router.get('/api/health', (req: Request, res: Response) => {
    console.log('API /api/health called');
    try {
-      const hasApiKey = !!(process.env.HUGGING_API_KEY || process.env.HF_TOKEN);
+      const hasApiKey = process.env.HF_TOKEN;
       res.json({
          status: 'ok',
          timestamp: new Date().toISOString(),
@@ -47,6 +44,7 @@ router.get('/api/health', (req: Request, res: Response) => {
 // });
 
 router.post('/api/chat', chatController.sendMessage);
+router.post('/api/generate-image', imageController.generateImage);
 
 // router.get('/api/products/:id/reviews', reviewController.getReviews);
 // router.post(

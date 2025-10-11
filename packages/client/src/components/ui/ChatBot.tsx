@@ -8,6 +8,7 @@ import {
 import ReactMarkDown from 'react-markdown';
 import { Button } from './button';
 import { FaArrowUp } from 'react-icons/fa6';
+import { FaImage } from 'react-icons/fa6';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
@@ -19,14 +20,20 @@ type ChatResponse = {
    message: string;
 };
 
+type ImageResponse = {
+   imageUrl: string;
+};
+
 type Message = {
    content: string;
    role: 'user' | 'bot';
+   type?: 'text' | 'image';
 };
 
 const ChatBot = () => {
    const [messages, setMessages] = useState<Message[]>([]);
    const [isBotTyping, setIsBotTyping] = useState(false);
+   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
    const [error, setError] = useState('');
    const conversationId = useRef(crypto.randomUUID());
    const lastMessageRef = useRef<HTMLDivElement | null>(null);
@@ -35,7 +42,10 @@ const ChatBot = () => {
       try {
          setIsBotTyping(true);
          setError('');
-         setMessages((prev) => [...prev, { content: prompt, role: 'user' }]);
+         setMessages((prev) => [
+            ...prev,
+            { content: prompt, role: 'user', type: 'text' },
+         ]);
          reset({ prompt: '' });
          const { data } = await axios.post<ChatResponse>('/api/chat', {
             prompt,
@@ -43,13 +53,40 @@ const ChatBot = () => {
          });
          setMessages((prev) => [
             ...prev,
-            { content: data.message, role: 'bot' },
+            { content: data.message, role: 'bot', type: 'text' },
          ]);
       } catch (error) {
          console.error(error);
          setError('Something went wrong, try again!');
       } finally {
          setIsBotTyping(false);
+      }
+   };
+
+   const onGenerateImageHandler = async ({ prompt }: FormData) => {
+      try {
+         setIsGeneratingImage(true);
+         setError('');
+         setMessages((prev) => [
+            ...prev,
+            { content: prompt, role: 'user', type: 'text' },
+         ]);
+         reset({ prompt: '' });
+         const { data } = await axios.post<ImageResponse>(
+            '/api/generate-image',
+            {
+               prompt,
+            }
+         );
+         setMessages((prev) => [
+            ...prev,
+            { content: data.imageUrl, role: 'bot', type: 'image' },
+         ]);
+      } catch (error) {
+         console.error(error);
+         setError('Failed to generate image, try again!');
+      } finally {
+         setIsGeneratingImage(false);
       }
    };
 
@@ -85,7 +122,15 @@ const ChatBot = () => {
                         : 'bg-gray-100 text-black self-start'
                   }`}
                >
-                  <ReactMarkDown>{message.content}</ReactMarkDown>
+                  {message.type === 'image' ? (
+                     <img
+                        src={message.content}
+                        alt="Generated"
+                        className="w-2xl h-auto rounded-lg"
+                     />
+                  ) : (
+                     <ReactMarkDown>{message.content}</ReactMarkDown>
+                  )}
                </div>
             ))}
             {isBotTyping && (
@@ -93,6 +138,13 @@ const ChatBot = () => {
                   <div className="w-2 h-2 rounded-full bg-gray-800 animate-pulse"></div>
                   <div className="w-2 h-2 rounded-full bg-gray-800 animate-pulse [animation-delay:0.2s]"></div>
                   <div className="w-2 h-2 rounded-full bg-gray-800 animate-pulse [animation-delay:0.4s]"></div>
+               </div>
+            )}
+            {isGeneratingImage && (
+               <div className="flex self-start gap-1 px-3 py-3 bg-gray-200 rounded-full">
+                  <span className="text-sm text-gray-700">
+                     Generating image...
+                  </span>
                </div>
             )}
             {error && <p className="text-red-600">{error}</p>}
@@ -112,12 +164,22 @@ const ChatBot = () => {
                placeholder="Ask anything"
                maxLength={100}
             />
-            <Button
-               disabled={!formState.isValid}
-               className="rounded-full w-9 h-9"
-            >
-               <FaArrowUp />
-            </Button>
+            <div className="flex gap-2">
+               <Button
+                  type="button"
+                  disabled={!formState.isValid || isGeneratingImage}
+                  onClick={handleSubmit(onGenerateImageHandler)}
+                  className="rounded-full w-9 h-9"
+               >
+                  <FaImage />
+               </Button>
+               <Button
+                  disabled={!formState.isValid || isBotTyping}
+                  className="rounded-full w-9 h-9"
+               >
+                  <FaArrowUp />
+               </Button>
+            </div>
          </form>
       </div>
    );
