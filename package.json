@@ -1,24 +1,26 @@
 {
-  "name": "chat_bot_m",
-  "module": "index.ts",
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "dev": "bun run index.ts",
-    "format": "prettier --write .",
-    "prepare": "husky"
-  },
-  "devDependencies": {
-    "@types/bun": "latest",
-    "concurrently": "^9.2.1",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.1.6",
-    "prettier": "^3.6.2"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "workspaces": [
-    "packages/*"
-  ]
+   "name": "chat_bot_m",
+   "module": "index.ts",
+   "type": "module",
+   "private": true,
+   "scripts": {
+      "dev": "bun run index.ts",
+      "format": "prettier --write .",
+      "prepare": "husky",
+      "build": "cd packages/client && npm run build",
+      "start": "cd packages/server && bun run start"
+   },
+   "devDependencies": {
+      "@types/bun": "latest",
+      "concurrently": "^9.2.1",
+      "husky": "^9.1.7",
+      "lint-staged": "^16.1.6",
+      "prettier": "^3.6.2"
+   },
+   "peerDependencies": {
+      "typescript": "^5"
+   },
+   "workspaces": [
+      "packages/*"
+   ]
 }

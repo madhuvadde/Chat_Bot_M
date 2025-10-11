@@ -37,10 +37,14 @@ const ChatBot = () => {
          setError('');
          setMessages((prev) => [...prev, { content: prompt, role: 'user' }]);
          reset({ prompt: '' });
-         const { data } = await axios.post<ChatResponse>('/api/chat', {
-            prompt,
-            conversationId: conversationId.current,
-         });
+         const { data } = await axios.post<ChatResponse>(
+            // '/api/chat',
+            `${import.meta.env.VITE_API_URL || ''}/api/chat`,
+            {
+               prompt,
+               conversationId: conversationId.current,
+            }
+         );
          setMessages((prev) => [
             ...prev,
             { content: data.message, role: 'bot' },
