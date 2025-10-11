@@ -14,11 +14,15 @@ app.use(router);
 // Only serve React app in production
 if (process.env.NODE_ENV === 'production') {
    // Serve static files from the React app build directory
-   app.use(express.static(path.join(__dirname, '../../client/dist')));
+   const clientDistPath = path.join(__dirname, '../../client/dist');
+   console.log('Serving static files from:', clientDistPath);
+
+   app.use(express.static(clientDistPath));
 
    // Handle React routing, return all requests to React app
    app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+      console.log('Serving index.html for route:', req.path);
+      res.sendFile(path.join(clientDistPath, 'index.html'));
    });
 }
 
