@@ -19,4 +19,19 @@ export default defineConfig({
          },
       },
    },
+   build: {
+      outDir: 'dist',
+      assetsDir: 'assets',
+      sourcemap: false,
+      minify: 'terser',
+      rollupOptions: {
+         output: {
+            manualChunks: {
+               vendor: ['react', 'react-dom'],
+               ui: ['@radix-ui/react-slot', 'lucide-react'],
+            },
+         },
+      },
+   },
+   base: '/', // Ensure assets are served from root path
 });

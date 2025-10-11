@@ -5,11 +5,16 @@
    "private": true,
    "scripts": {
       "dev": "bun run index.ts",
+      "dev:client": "cd packages/client && bun run dev",
+      "dev:server": "cd packages/server && bun run dev",
+      "dev:both": "concurrently \"bun run dev:server\" \"bun run dev:client\"",
       "format": "prettier --write .",
       "prepare": "husky",
-      "build": "cd packages/client && npm run build",
+      "build": "cd packages/client && bun run build",
+      "build:client": "cd packages/client && bun run build",
       "start": "cd packages/server && bun run start",
-      "start:prod": "cd packages/server && bun run start"
+      "start:prod": "NODE_ENV=production cd packages/server && bun run start",
+      "start:dev": "NODE_ENV=development cd packages/server && bun run start"
    },
    "devDependencies": {
       "@types/bun": "latest",

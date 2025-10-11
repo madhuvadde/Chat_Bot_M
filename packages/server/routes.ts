@@ -6,9 +6,10 @@ import { chatController } from './controller/chat.controller';
 
 const router = express.Router();
 
-router.get('/', (req: Request, res: Response) => {
-   res.send(`Hello World!! ${process.env.HUGGING_API_KEY}`);
-});
+// Root route moved to main server file for environment-specific handling
+// router.get('/', (req: Request, res: Response) => {
+//    res.send(`Hello World!! ${process.env.HUGGING_API_KEY}`);
+// });
 router.get('/api/hello', (req: Request, res: Response) => {
    res.send({ message: `Hello World of OG!!` });
 });
