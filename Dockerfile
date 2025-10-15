@@ -1,9 +1,9 @@
 FROM ollama/ollama:latest
 
-# Expose Ollama's default API port
+# Install Bun
+RUN curl -fsSL https://bun.sh/install | bash
+ENV PATH="/root/.bun/bin:$PATH"
+
 EXPOSE 11434
-
-# Set environment variables (optional)
 ENV OLLAMA_HOST=0.0.0.0
-
-# The start command will be handled by railway.toml
+# The start command should be handled by railway.toml
