@@ -36,16 +36,21 @@ export const clientProvider = {
 
    async ollamaClient(history: any) {
       const ollamaClient = new Ollama();
-      const response = await ollamaClient.chat({
-         model: 'gemma3:4b',
-         // model: 'tinyllama:latest',
-         messages: history,
-      });
 
-      console.log(`response logging-->`, JSON.stringify(response));
-      const assistantReply: string =
-         response?.message?.content || 'Something Went Wrong!!!';
-      console.log('assistantreply', { assistantReply });
-      return assistantReply;
+      try {
+         const response = await ollamaClient.chat({
+            model: 'gemma3:4b',
+            // model: 'tinyllama:latest',
+            messages: history,
+         });
+
+         console.log(`response logging-->`, JSON.stringify(response));
+         const assistantReply: string =
+            response?.message?.content || 'Something Went Wrong!!!';
+         return assistantReply;
+      } catch (error) {
+         console.log('Inside catch block');
+         console.error(error);
+      }
    },
 };
