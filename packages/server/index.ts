@@ -159,8 +159,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
    });
 });
 
-// const port = process.env.PORT || 3000;
-const port = process.env.PORT || 11434;
+const port = process.env.PORT || 3000;
+// const port = process.env.PORT || 11434;
 
 app.listen(port, () => {
    console.log(`Server is running on http://localhost:${port}`);

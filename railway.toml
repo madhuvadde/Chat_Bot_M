@@ -4,7 +4,7 @@ dockerfilePath = "Dockerfile"
 buildCommand = "bun install && cd packages/client && bun install && bun run build && cd ../server && bun install"
 
 [deploy]
-startCommand = "bun run start:prod && ollama serve"
+startCommand = "bun run start:prod & ollama serve & wait"
 healthcheckPath = "/"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
@@ -13,3 +13,4 @@ restartPolicyMaxRetries = 10
 [env]
 NODE_ENV = "production"
 NODE_VERSION = "22"
+PORT = "3000"
