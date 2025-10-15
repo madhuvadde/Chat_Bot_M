@@ -4,7 +4,7 @@ dockerfilePath = "Dockerfile"
 buildCommand = "bun install && cd packages/client && bun install && bun run build && cd ../server && bun install"
 
 [deploy]
-startCommand = "cd packages/server && bun run start:prod"
+startCommand = "bun run start:prod"
 healthcheckPath = "/"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
