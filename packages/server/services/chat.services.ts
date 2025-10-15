@@ -36,6 +36,7 @@ export const chatService = {
       // const assistantReply: string =
       //    output?.choices[0]?.message?.content || 'Something Went Wrong!!!';
       const assistantReply: string = await clientProvider.ollamaClient(history);
+      // console.log({ assistantReply });
       // history.push({ role: 'assistant', content: assistantReply });
       conversationRepository.setConversationHistory(history, {
          role: 'assistant',

@@ -37,8 +37,8 @@ export const clientProvider = {
    async ollamaClient(history: any) {
       const ollamaClient = new Ollama();
       const response = await ollamaClient.chat({
-         //  model: 'gemma3:4b',
-         model: 'tinyllama:latest',
+         model: 'gemma3:4b',
+         // model: 'tinyllama:latest',
          messages: history,
       });
       const assistantReply: string =
