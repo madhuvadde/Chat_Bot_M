@@ -41,6 +41,8 @@ export const clientProvider = {
          // model: 'tinyllama:latest',
          messages: history,
       });
+
+      console.log(`response logging-->`, JSON.stringify(response));
       const assistantReply: string =
          response?.message?.content || 'Something Went Wrong!!!';
       console.log('assistantreply', { assistantReply });
