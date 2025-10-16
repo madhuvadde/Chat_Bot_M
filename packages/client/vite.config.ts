@@ -14,8 +14,7 @@ export default defineConfig({
    server: {
       proxy: {
          '/api': {
-            // target: 'http://localhost:3000',
-            target: 'http://resourceful-peace.railway.internal:11434',
+            target: 'http://localhost:11434',
             changeOrigin: true,
          },
       },
