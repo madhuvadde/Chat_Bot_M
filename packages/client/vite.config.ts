@@ -14,7 +14,8 @@ export default defineConfig({
    server: {
       proxy: {
          '/api': {
-            target: 'http://localhost:3000',
+            // target: 'http://localhost:3000',
+            target: process.env.OLLAMA_API_URL || 'http://localhost:11434',
             changeOrigin: true,
          },
       },
