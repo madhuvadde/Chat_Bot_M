@@ -160,9 +160,10 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
    });
 });
 
-const port = process.env.PORT || 11434;
-const url = process.env.OLLAMA_API_URL || `http://localhost:${port}`;
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
-   console.log(`Server is running on ${url}`);
+   console.log(
+      `Server is running on http://localhost:${port} (env: ${process.env.NODE_ENV})`
+   );
 });
