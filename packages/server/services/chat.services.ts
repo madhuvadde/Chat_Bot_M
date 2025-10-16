@@ -21,23 +21,9 @@ export const chatService = {
          role: 'user',
          content: prompt,
       });
-      // history.push({ role: 'user', content: text });
 
-      // const output = await inferenceClient.chatCompletion({
-      //    provider: 'cerebras',
-      //    model: 'meta-llama/Llama-3.1-8B-Instruct',
-      //    messages: history,
-      // });
-      // const output = await openai.chat.completions.create({
-      //    model: 'sonar-pro',
-      //    messages: history,
-      // });
-      // console.log(`output`, { output });
-      // const assistantReply: string =
-      //    output?.choices[0]?.message?.content || 'Something Went Wrong!!!';
-      const assistantReply: string = await clientProvider.ollamaClient(history);
-      // console.log({ assistantReply });
-      // history.push({ role: 'assistant', content: assistantReply });
+      const assistantReply: any = await clientProvider.ollamaClient(history);
+
       conversationRepository.setConversationHistory(history, {
          role: 'assistant',
          content: assistantReply,

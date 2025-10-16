@@ -35,20 +35,16 @@ export const clientProvider = {
    },
 
    async ollamaClient(history: any) {
-      // const ollamaClient = new Ollama();
-      const OLLAMA_BASE_URL = process.env.OLLAMA_URL || 'http://ollama:11434';
+      const ollamaClient = new Ollama();
 
-      const ollamaClient = new OpenAI({
-         baseURL: OLLAMA_BASE_URL,
-         apiKey: 'ollama', // not required but SDK needs something
-      });
       try {
-         const output = await ollamaClient.chat.completions.create({
-            model: 'gemma3:4b',
+         const output = await ollamaClient.chat({
+            model: 'tinyllama',
             messages: history,
          });
+         console.log(`output`, output);
          const assistantReply: string =
-            output?.choices[0]?.message?.content || 'Something Went Wrong!!!';
+            output?.message?.content || 'Something Went Wrong!!!';
          return assistantReply;
       } catch (error) {
          console.log('Inside catch block');
