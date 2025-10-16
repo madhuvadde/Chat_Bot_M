@@ -8,6 +8,7 @@ import { existsSync } from 'fs';
 import router from './routes';
 
 import dotenv from 'dotenv';
+dotenv.config();
 
 // Load environment variables based on NODE_ENV
 const envFile =
@@ -84,7 +85,7 @@ if (process.env.NODE_ENV === 'production') {
    }
 } else {
    // Development: Only serve API routes, let Vite handle the frontend
-   console.log('Running in DEVELOPMENT mode - API only');
+   console.log(`Running in ${process.env.NODE_ENV} mode - API only`);
 
    // Health check endpoint
    app.get('/', (req, res) => {
@@ -159,9 +160,9 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
    });
 });
 
-// const port = process.env.PORT || 3000;
 const port = process.env.PORT || 11434;
+const url = process.env.OLLAMA_API_URL || `http://localhost:${port}`;
 
 app.listen(port, () => {
-   console.log(`Server is running on http://localhost:${port}`);
+   console.log(`Server is running on ${url}`);
 });
