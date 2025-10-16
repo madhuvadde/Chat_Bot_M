@@ -15,7 +15,7 @@ export default defineConfig({
       proxy: {
          '/api': {
             // target: 'http://localhost:3000',
-            target: process.env.OLLAMA_API_URL || 'http://localhost:11434',
+            target: 'http://resourceful-peace.railway.internal:11434',
             changeOrigin: true,
          },
       },
