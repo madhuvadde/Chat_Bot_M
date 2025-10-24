@@ -22,7 +22,8 @@ export const chatService = {
          content: prompt,
       });
 
-      const assistantReply: any = await clientProvider.ollamaClient(history);
+      // const assistantReply: any = await clientProvider.ollamaClient(history);
+      const assistantReply: any = await clientProvider.openAIClient(history);
 
       conversationRepository.setConversationHistory(history, {
          role: 'assistant',
