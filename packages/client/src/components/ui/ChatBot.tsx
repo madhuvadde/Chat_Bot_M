@@ -8,7 +8,7 @@ import {
 import ReactMarkDown from 'react-markdown';
 import { Button } from './button';
 import { FaArrowUp } from 'react-icons/fa6';
-import { FaImage } from 'react-icons/fa6';
+// import { FaImage } from 'react-icons/fa6';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
@@ -165,14 +165,14 @@ const ChatBot = () => {
                maxLength={100}
             />
             <div className="flex gap-2">
-               <Button
+               {/* <Button
                   type="button"
                   disabled={!formState.isValid || isGeneratingImage}
                   onClick={handleSubmit(onGenerateImageHandler)}
                   className="rounded-full w-9 h-9"
                >
                   <FaImage />
-               </Button>
+               </Button> */}
                <Button
                   disabled={!formState.isValid || isBotTyping}
                   className="rounded-full w-9 h-9"
