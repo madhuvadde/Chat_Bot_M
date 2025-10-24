@@ -8,7 +8,7 @@ import {
 import ReactMarkDown from 'react-markdown';
 import { Button } from './button';
 import { FaArrowUp } from 'react-icons/fa6';
-// import { FaImage } from 'react-icons/fa6';
+import { FaImage } from 'react-icons/fa6';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
@@ -63,32 +63,32 @@ const ChatBot = () => {
       }
    };
 
-   // const onGenerateImageHandler = async ({ prompt }: FormData) => {
-   //    try {
-   //       setIsGeneratingImage(true);
-   //       setError('');
-   //       setMessages((prev) => [
-   //          ...prev,
-   //          { content: prompt, role: 'user', type: 'text' },
-   //       ]);
-   //       reset({ prompt: '' });
-   //       const { data } = await axios.post<ImageResponse>(
-   //          '/api/generate-image',
-   //          {
-   //             prompt,
-   //          }
-   //       );
-   //       setMessages((prev) => [
-   //          ...prev,
-   //          { content: data.imageUrl, role: 'bot', type: 'image' },
-   //       ]);
-   //    } catch (error) {
-   //       console.error(error);
-   //       setError('Failed to generate image, try again!');
-   //    } finally {
-   //       setIsGeneratingImage(false);
-   //    }
-   // };
+   const onGenerateImageHandler = async ({ prompt }: FormData) => {
+      try {
+         setIsGeneratingImage(true);
+         setError('');
+         setMessages((prev) => [
+            ...prev,
+            { content: prompt, role: 'user', type: 'text' },
+         ]);
+         reset({ prompt: '' });
+         const { data } = await axios.post<ImageResponse>(
+            '/api/generate-image',
+            {
+               prompt,
+            }
+         );
+         setMessages((prev) => [
+            ...prev,
+            { content: data.imageUrl, role: 'bot', type: 'image' },
+         ]);
+      } catch (error) {
+         console.error(error);
+         setError('Failed to generate image, try again!');
+      } finally {
+         setIsGeneratingImage(false);
+      }
+   };
 
    const onKeyDownHandler = (e: KeyboardEvent<HTMLFormElement>) => {
       if (e.key === 'Enter' && !e.shiftKey) {
@@ -165,14 +165,14 @@ const ChatBot = () => {
                maxLength={100}
             />
             <div className="flex gap-2">
-               {/* <Button
+               <Button
                   type="button"
-                  disabled={!formState.isValid || isGeneratingImage}
+                  disabled={!formState.isValid || isGeneratingImage || true} //temporary true
                   onClick={handleSubmit(onGenerateImageHandler)}
                   className="rounded-full w-9 h-9"
                >
                   <FaImage />
-               </Button> */}
+               </Button>
                <Button
                   disabled={!formState.isValid || isBotTyping}
                   className="rounded-full w-9 h-9"
